@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn portfolio.wsgi
+web: gunicorn prj_django_webcam.wsgi
