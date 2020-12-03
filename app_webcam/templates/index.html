@@ -17,7 +17,7 @@
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <center>
-                    <button class="btn btn-primary">Take snapshot</button>
+                    <button class="btn btn-primary" id="btn_snapshot" name="btn_snapshot">Take snapshot</button>
                 </center>
 
             </div>
@@ -115,7 +115,8 @@ const canvas = window.canvas = document.querySelector('canvas');
 canvas.width = 480;
 canvas.height = 360;
 
-const button = document.querySelector('button');
+//const button = document.querySelector('button');
+const button = document.getElementById('btn_snapshot');
 button.onclick = function() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
