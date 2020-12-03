@@ -2,28 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <title>Django Webcamera</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <style type="text/css">
+          #loader{
+                      position: fixed;
+                      left: 50%;
+                      top: 50%;
+                      display:none;
+                      z-index: 9999;
+                }
+
+            .overlay {
+                        background-color:#EFEFEF;
+                        position: fixed;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 1000;
+                        top: 0px;
+                        left: 0px;
+                        opacity: .5;
+                        filter: alpha(opacity=50);
+                        display: none;
+  }
+
+
+    </style>
 </head>
 <body>
 
-<div id="container">
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand mb-0 h1">Django Web Camera</span>
+</nav>
 
-    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>getUserMedia ⇒ canvas</span>
-    </h1>
+<div class="bg-secondary ">
 
-    <video playsinline autoplay></video>
-    <button>Take snapshot</button>
-    <canvas id="canvas"></canvas>
+    <div id="container" class="container">
 
-    <form action="" method="POST" id="form1">
-        {% csrf_token %}
-        <input type="hidden" name="canvasData" id="my_hidden">
-        <input type="submit" name="submit" value="submit" onclick="save()">
-    </form>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4">
+                <center>
+                    <video playsinline autoplay style='border: 1px solid #fff;'></video>
+                </center>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <center>
+                    <button class="btn btn-primary">Take snapshot</button>
+                </center>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2">
+                <center>
+                    <canvas id="canvas" style='border: 1px solid #fff;'></canvas>
+                </center>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2 mb-2">
+                <center>
+                    <form action="" method="POST" id="form1">
+                        {% csrf_token %}
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                        <input type="submit" name="submit" value="Submit" onclick="save()" class="btn btn-primary">
+                    </form>
+                </center>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class=" d-flex justify-content-center align-items-center" id="spinner">
+    <div class="">
+
+        <div class=" spinner-border text-dark" role="status" id="loader">
+
+            <span class="sr-only">Loading...</span>
+        </div>
+
+    </div>
 
 </div>
 
+<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <div class="container text-center">
+        Developed By Harshit Santosh
+
+    </div>
+</footer>
 <script>
 
     'use strict';
@@ -59,16 +132,32 @@ navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handl
 
 function save()
     {
+        var element = document.getElementById("spinner");
+        element.classList.add("overlay");
+        $("#loader").show();
         var canvas = document.getElementById('canvas');
         document.getElementById('my_hidden').value = canvas.toDataURL('image/png');
         document.forms["form1"].submit(); //test
     }
 
+
+
+
+
+
 </script>
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
-<script src="../../../js/lib/ga.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>
