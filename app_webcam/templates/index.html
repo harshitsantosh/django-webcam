@@ -36,7 +36,13 @@
 
 <nav class="navbar navbar-dark bg-dark">
     <span class="navbar-brand mb-0 h1">Django Web Camera</span>
+    <form class="form-inline my-2 my-lg-0">
+
+        <span class="navbar-brand mb-0 h1">Welcome {{user.username}}</span>
+      <a class="btn btn-primary my-2 my-sm-0" type="submit" href="{% url 'logout' %}">Log Out</a>
+    </form>
 </nav>
+
 
 
 <div class="bg-secondary ">

@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import base64
 from django.core.files.base import ContentFile
 from .models import Camera
+from django.contrib.auth.decorators import login_required
+from .forms import RegistrationForm
 
 
+@login_required()
 def webcam(request):
     context = {
         'success': False
@@ -20,3 +23,18 @@ def webcam(request):
         }
 
     return render(request, 'index.html', context)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.save()
+            return redirect('login')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'signup.html', context={'form': form
+
+                                                   })
