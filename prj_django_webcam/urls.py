@@ -21,9 +21,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.webcam, name='webcam'),
+    path('webcam', views.webcam, name='webcam'),
     path('images', views.uploaded_images, name='uploaded_images'),
     path('signup', views.signup, name='signup'),
+    path('', views.landing, name='landing'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 

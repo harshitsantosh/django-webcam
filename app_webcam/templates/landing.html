@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Django WebCamera{% endblock %}
+{% block content %}
+
+<div class="bg-secondary ">
+
+    <div id="container" class="container">
+
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4">
+                <center>
+                    <video playsinline autoplay style='border: 1px solid #fff;'></video>
+                </center>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <center>
+                    <button class="btn btn-primary" id="btn_snapshot" name="btn_snapshot">Take snapshot</button>
+                </center>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2">
+                <center>
+                    <canvas id="canvas" style='border: 1px solid #fff;'></canvas>
+                </center>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2 mb-2 bg-light">
+                <center>
+                    {% if user.is_authenticated%}
+                    <a href="{% url 'webcam' %}">Click here </a> to save your Image in Database.
+                    {% else %}
+                    <a href="{% url 'login' %}">Click here </a> to Signup/Login to save your Image in Database.
+
+                    {% endif %}
+                    <p>Your images will be automatically deleted in 24 hours. So do not worry and use this portal.</p>
+                </center>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+'use strict';
+
+
+
+// Put variables in global scope to make them available to the browser console.
+const video = document.querySelector('video');
+const canvas = window.canvas = document.querySelector('canvas');
+canvas.width = 480;
+canvas.height = 360;
+
+//const button = document.querySelector('button');
+const button = document.getElementById('btn_snapshot');
+button.onclick = function() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+};
+
+const constraints = {
+  audio: false,
+  video: true
+};
+
+function handleSuccess(stream) {
+  window.stream = stream; // make stream available to browser console
+  video.srcObject = stream;
+}
+
+function handleError(error) {
+  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+}
+
+navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
+
+</script>
+{% endblock %}

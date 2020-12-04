@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
 import base64
 from django.core.files.base import ContentFile
-from .models import Camera
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm
 from .models import Camera
+
+
+def landing(request):
+    if str(request.user) != 'AnonymousUser':
+        return redirect(to='webcam')
+    return render(request, 'landing.html')
 
 
 @login_required()
