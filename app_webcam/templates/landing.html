@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4">
                 <center>
-                    <video playsinline autoplay style='border: 1px solid #fff;'></video>
+                    <video playsinline autoplay style='border: 1px solid #fff;' width="320" height="240"></video>
                 </center>
 
             </div>
@@ -28,14 +28,13 @@
 
             </div>
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2 mb-2 bg-light">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2 mb-2 bg-light ">
                 <center>
-                    {% if user.is_authenticated%}
-                    <a href="{% url 'webcam' %}">Click here </a> to save your Image in Database.
-                    {% else %}
-                    <a href="{% url 'login' %}">Click here </a> to Signup/Login to save your Image in Database.
 
-                    {% endif %}
+                    <a href="{% url 'signup' %}" class="btn btn-success mt-2"> Sign Up</a> or
+                    <a href="{% url 'login' %}" class="btn btn-primary mt-2">Login </a> to save your Image in Database.
+
+
                     <p>Your images will be automatically deleted in 24 hours. So do not worry and use this portal.</p>
                 </center>
 
@@ -45,10 +44,6 @@
 
     </div>
 </div>
-
-
-
-
 
 
 {% endblock %}
@@ -63,14 +58,14 @@
 // Put variables in global scope to make them available to the browser console.
 const video = document.querySelector('video');
 const canvas = window.canvas = document.querySelector('canvas');
-canvas.width = 480;
-canvas.height = 360;
+canvas.width = 320;
+canvas.height = 240;
 
 //const button = document.querySelector('button');
 const button = document.getElementById('btn_snapshot');
 button.onclick = function() {
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  canvas.width = 320;
+  canvas.height = 240;
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 };
 
@@ -89,6 +84,7 @@ function handleError(error) {
 }
 
 navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
 
 
 </script>
