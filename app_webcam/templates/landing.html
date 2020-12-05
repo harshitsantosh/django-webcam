@@ -7,7 +7,9 @@
 
     <div id="container" class="container">
 
-
+        <div class="select">
+            <label for="videoSource">Video source: </label><select id="videoSource"></select>
+        </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4">
                 <center>
@@ -61,6 +63,11 @@ const canvas = window.canvas = document.querySelector('canvas');
 canvas.width = 320;
 canvas.height = 240;
 
+//for selecting the Camera//
+const videoSelect = document.querySelector('select#videoSource');
+const selectors = [videoSelect];
+//for selecting the Camera//
+
 //const button = document.querySelector('button');
 const button = document.getElementById('btn_snapshot');
 button.onclick = function() {
@@ -69,21 +76,83 @@ button.onclick = function() {
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 };
 
-const constraints = {
-  audio: false,
-  video: true
-};
+// for finding Camera
+function gotDevices(deviceInfos) {
+  // Handles being called several times to update labels. Preserve values.
+  const values = selectors.map(select => select.value);
+  selectors.forEach(select => {
+    while (select.firstChild) {
+      select.removeChild(select.firstChild);
+    }
+  });
+  for (let i = 0; i !== deviceInfos.length; ++i) {
+    const deviceInfo = deviceInfos[i];
+    const option = document.createElement('option');
+    option.value = deviceInfo.deviceId;
+    if (deviceInfo.kind === 'videoinput') {
+      option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+      videoSelect.appendChild(option);
+    } else {
+      console.log('Some other kind of source/device: ', deviceInfo);
+    }
+  }
+  selectors.forEach((select, selectorIndex) => {
+    if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+      select.value = values[selectorIndex];
+    }
+  });
+}
 
-function handleSuccess(stream) {
-  window.stream = stream; // make stream available to browser console
+// for enumerating the devices //
+navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
+
+function gotStream(stream) {
+  window.stream = stream; // make stream available to console
   video.srcObject = stream;
+  // Refresh button list in case labels have become available
+  return navigator.mediaDevices.enumerateDevices();
+}
+
+
+function start() {
+  if (window.stream) {
+    window.stream.getTracks().forEach(track => {
+      track.stop();
+    });
+  }
+
+  const videoSource = videoSelect.value;
+  const constraints = {
+    audio: false,
+    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  };
+  navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 }
 
 function handleError(error) {
   console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
-navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
+videoSelect.onchange = start;
+start();
+<!--const constraints = {-->
+<!--  audio: false,-->
+<!--  video: true-->
+<!--};-->
+
+<!--function handleSuccess(stream) {-->
+<!--  window.stream = stream; // make stream available to browser console-->
+<!--  video.srcObject = stream;-->
+<!--}-->
+
+
+
+<!--navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);-->
+
+
+
+
 
 
 
